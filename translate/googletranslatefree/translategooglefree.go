@@ -37,7 +37,10 @@ func encodeURI(s string) (string, error) {
 	// return v, nil
 }
 
-func Translate(source, sourceLang, targetLang string) (string, error) {
+func Translate(source string) (string, error) {
+	sourceLang := "en"
+	targetLang := "sl"
+
 	var text []string
 	var result []interface{}
 

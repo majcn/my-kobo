@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"time"
 	. "translate/types"
 )
 
@@ -15,7 +16,12 @@ func Translate(source string) (result TranslateResult, err error) {
 
 	r, err := http.Get(reqUrl)
 	if err != nil {
-		return result, errors.New("error getting termania.net")
+		time.Sleep(time.Second)
+		r, err = http.Get(reqUrl)
+
+		if err != nil {
+			err = errors.New("error getting termania.net")
+		}
 	}
 	defer r.Body.Close()
 

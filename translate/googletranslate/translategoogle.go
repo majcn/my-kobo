@@ -3,6 +3,7 @@ package googletranslate
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"github.com/tidwall/gjson"
 	"io/ioutil"
@@ -11,16 +12,29 @@ import (
 	"net/url"
 	"regexp"
 	"strconv"
+	"time"
 	. "translate/types"
 )
 
-func GetRawObjectGetParams(baseUrl string) url.Values {
-	r, _ := http.Get(baseUrl)
+func GetRawObjectGetParams(baseUrl string) (result url.Values, err error) {
+	r, err := http.Get(baseUrl)
+	if err != nil {
+		time.Sleep(time.Second)
+		r, err = http.Get(baseUrl)
+
+		if err != nil {
+			err = errors.New("error getting translate.google.com")
+		}
+	}
 	defer r.Body.Close()
 
-	bodyBytes, _ := ioutil.ReadAll(r.Body)
+	bodyBytes, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = errors.New("error reading response body")
+		return
+	}
 
-	return url.Values{
+	result = url.Values{
 		"rpcids": []string{"MkEWBc"},
 		"f.sid": []string{string(regexp.MustCompile(`"FdrFJe":"(.*?)"`).FindSubmatch(bodyBytes)[1])},
 		"bl": []string{string(regexp.MustCompile(`"cfb2h":"(.*?)"`).FindSubmatch(bodyBytes)[1])},
@@ -31,12 +45,19 @@ func GetRawObjectGetParams(baseUrl string) url.Values {
 		"_reqid": []string{strconv.Itoa(1000 + rand.Intn(9000))},
 		"rt": []string{"c"},
 	}
+
+	return
 }
 
-func GetRawObject(source, sourceLang, targetLang string) ([]byte, error) {
+func GetRawObject(source, sourceLang, targetLang string) (result []byte, err error) {
 	baseUrl := "https://translate.google.com"
 
-	requestUrl := fmt.Sprintf(`%s/_/TranslateWebserverUi/data/batchexecute?%s`, baseUrl, GetRawObjectGetParams(baseUrl).Encode())
+	params, err := GetRawObjectGetParams(baseUrl)
+	if err != nil {
+		return
+	}
+
+	requestUrl := fmt.Sprintf(`%s/_/TranslateWebserverUi/data/batchexecute?%s`, baseUrl, params.Encode())
 	requestBody := url.Values{
 		"f.req": []string{fmt.Sprintf(`[[["MkEWBc","[[\"%s\",\"%s\",\"%s\",true],[null]]",null,"generic"]]]`, source, sourceLang, targetLang)},
 	}
@@ -49,7 +70,9 @@ func GetRawObject(source, sourceLang, targetLang string) ([]byte, error) {
 	length := bodyBytes[6:6+lengthLength]
 	lengthAsInt, err := strconv.Atoi(string(length))
 
-	return bodyBytes[7+lengthLength:8+lengthLength+lengthAsInt], err
+	result = bodyBytes[7+lengthLength:8+lengthLength+lengthAsInt]
+
+	return
 }
 
 func Translate(source string) (result TranslateResult, err error) {

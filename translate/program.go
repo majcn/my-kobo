@@ -1,17 +1,18 @@
 package main
 
 import (
-	"fmt"
 	"os"
-	fullTranslate "translate/googletranslate"
-	simpleTranslate "translate/googletranslatefree"
+	detailedGoogleTranslate "translate/googletranslate"
+	simpleGoogleTranslate "translate/googletranslatefree"
+	"translate/termania"
+	. "translate/types"
 )
 
-func printTranslate(result interface{}, err error) {
+func printTranslate(result TranslateResult, err error) {
 	if err != nil {
-		fmt.Println(err)
+		println(err.Error())
 	} else {
-		fmt.Println(result)
+		println(result.String())
 	}
 }
 
@@ -20,11 +21,12 @@ func main() {
 	os.Setenv("SSL_CERT_FILE", "/mnt/onboard/.adds/certs/ca-bundle.crt")
 
 	text := os.Args[1]
-	isSimple := os.Args[2] == "S"
-
-	if isSimple {
-		printTranslate(simpleTranslate.Translate(text))
-	} else {
-		printTranslate(fullTranslate.Translate(text))
+	switch os.Args[2] {
+	case "GS":
+		printTranslate(simpleGoogleTranslate.Translate(text))
+	case "GD":
+		printTranslate(detailedGoogleTranslate.Translate(text))
+	case "T":
+		printTranslate(termania.Translate(text))
 	}
 }

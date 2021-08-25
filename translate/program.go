@@ -23,8 +23,8 @@ func main() {
 	isSimple := os.Args[2] == "S"
 
 	if isSimple {
-		printTranslate(simpleTranslate.Translate(text, "en", "sl"))
+		printTranslate(simpleTranslate.Translate(text))
 	} else {
-		printTranslate(fullTranslate.Translate(text, "en", "sl"))
+		printTranslate(fullTranslate.Translate(text))
 	}
 }

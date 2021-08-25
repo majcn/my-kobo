@@ -61,6 +61,7 @@ func Translate(source string) (result TranslateResult, err error) {
 
 	result.Translation = gjson.Get(rawObjectJsonData, "1.0.0.5.0.0").String()
 
+	result.Details = make(map[string][]string)
 	for _, v := range gjson.Get(rawObjectJsonData, "3.5.0").Array() {
 		translateType := gjson.Get(v.Raw, "0").String()
 		for _, x := range gjson.Get(v.Raw, "1.#.0").Array() {

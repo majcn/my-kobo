@@ -11,34 +11,8 @@ import (
 	"net/url"
 	"regexp"
 	"strconv"
-	"strings"
+	. "translate/types"
 )
-
-type TranslateDetails struct {
-	Type string
-	Result []string
-}
-
-type TranslateResult struct {
-	Translation string
-	Details []TranslateDetails
-}
-
-func (r TranslateResult) String() string {
-	var result []string
-
-	result = append(result, r.Translation)
-	result = append(result, "")
-	for _, v := range r.Details {
-		result = append(result, v.Type)
-		for _, vv := range v.Result {
-			result = append(result, "  " + vv)
-		}
-		result = append(result, "")
-	}
-
-	return strings.Join(result, "\n")
-}
 
 func GetRawObjectGetParams(baseUrl string) url.Values {
 	r, _ := http.Get(baseUrl)
@@ -88,17 +62,11 @@ func Translate(source string) (result TranslateResult, err error) {
 	result.Translation = gjson.Get(rawObjectJsonData, "1.0.0.5.0.0").String()
 
 	for _, v := range gjson.Get(rawObjectJsonData, "3.5.0").Array() {
-		detail := TranslateDetails{
-			Type:   gjson.Get(v.Raw, "0").String(),
-			Result: []string{},
-		}
-
+		translateType := gjson.Get(v.Raw, "0").String()
 		for _, x := range gjson.Get(v.Raw, "1.#.0").Array() {
-			detail.Result = append(detail.Result, x.String())
+			result.Details[translateType] = append(result.Details[translateType], x.String())
 		}
-
-		result.Details = append(result.Details, detail)
 	}
 
-	return result, err
+	return
 }

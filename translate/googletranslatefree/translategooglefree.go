@@ -9,9 +9,10 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	. "translate/types"
 )
 
-func Translate(source string) (string, error) {
+func Translate(source string) (result TranslateResult, err error) {
 	sourceLang := "en"
 	targetLang := "sl"
 
@@ -19,19 +20,23 @@ func Translate(source string) (string, error) {
 
 	r, err := http.Get(reqUrl)
 	if err != nil {
-		return "err", errors.New("error getting translate.googleapis.com")
+		err = errors.New("error getting translate.googleapis.com")
+		return
 	}
 	defer r.Body.Close()
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return "err", errors.New("error reading response body")
+		err = errors.New("error reading response body")
+		return
 	}
 
-	result := gjson.GetBytes(body, "0.0.0").String()
-	if len(result) > 0 {
-		return result, nil
+	resultAsText := gjson.GetBytes(body, "0.0.0").String()
+	if len(resultAsText) > 0 {
+		result.Translation = resultAsText
+		return
 	} else {
-		return "err", errors.New("no translated data in response")
+		err = errors.New("no translated data in response")
+		return
 	}
 }

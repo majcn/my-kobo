@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"time"
 	. "translate/types"
 )
 
@@ -20,8 +21,13 @@ func Translate(source string) (result TranslateResult, err error) {
 
 	r, err := http.Get(reqUrl)
 	if err != nil {
-		err = errors.New("error getting translate.googleapis.com")
-		return
+		time.Sleep(time.Second)
+		r, err = http.Get(reqUrl)
+
+		if err != nil {
+			err = errors.New("error getting translate.googleapis.com")
+			return
+		}
 	}
 	defer r.Body.Close()
 

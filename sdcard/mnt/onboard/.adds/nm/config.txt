@@ -1,10 +1,10 @@
-menu_item :selection :Google Translate              :cmd_output     :2000:/mnt/onboard/.adds/majcn/translate '{1|aS|"$}' 'G'
-menu_item :selection :Google Translate Simple       :cmd_output     :2000:/mnt/onboard/.adds/majcn/translate '{1|aS|"$}' 'S'
-menu_item :selection_search :Search Termania        :nickel_browser :modal:https://www.termania.net/iskanje?SearchIn=All&sl=2&tl=61&query={1|anS|%} body > .navbar {display: none} body > .info {display: none} body > .results {display: none} .page-header {display: none} body > .container > .row > .col-sm-4 {display: none}
-menu_item :selection_search :Search GoogleTranslate :nickel_browser :modal:https://translate.google.com/?sl=en&tl=sl&op=translate&text={1|aS|%}
+menu_item :selection :Google Translate (Detailed)    :cmd_output     :2000:/mnt/onboard/.adds/majcn/translate '{1|aS|"$}' 'GD'
+menu_item :selection :Google Translate (Simple)      :cmd_output     :2000:/mnt/onboard/.adds/majcn/translate '{1|aS|"$}' 'GS'
+menu_item :selection :Termania                       :cmd_output     :2000:/mnt/onboard/.adds/majcn/translate '{1|aS|"$}' 'T'
 
 menu_item :main    :USB Connection          :nickel_misc        :force_usb_connection
 menu_item :main    :Kobo Sync               :cmd_output         :5000:/mnt/onboard/.adds/majcn/koboSync
 
-menu_item :reader  :Orientation (portrait)  :nickel_orientation :portrait
-menu_item :reader  :Orientation (landscape) :nickel_orientation :landscapeg
+menu_item :reader    :Orientation (portrait)      :nickel_orientation :portrait
+menu_item :reader    :Orientation (landscape)     :nickel_orientation :landscape
+menu_item :reader    :EnableWifi  :nickel_wifi    :autoconnect

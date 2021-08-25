@@ -78,7 +78,10 @@ func GetRawObject(source, sourceLang, targetLang string) ([]byte, error) {
 	return bodyBytes[7+lengthLength:8+lengthLength+lengthAsInt], err
 }
 
-func Translate(source, sourceLang, targetLang string) (result TranslateResult, err error) {
+func Translate(source string) (result TranslateResult, err error) {
+	sourceLang := "en"
+	targetLang := "sl"
+
 	rawObjectJson, err := GetRawObject(source, sourceLang, targetLang)
 	rawObjectJsonData := gjson.GetBytes(rawObjectJson, "0.2").String()
 

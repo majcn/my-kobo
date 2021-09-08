@@ -2,17 +2,41 @@ package main
 
 import (
 	"os"
+	"strings"
 	detailedGoogleTranslate "translate/googletranslate"
 	simpleGoogleTranslate "translate/googletranslatefree"
 	"translate/termania"
 	. "translate/types"
 )
 
+func WrapText(s string, limit int) string {
+	var sb = strings.Builder{}
+
+	start := 0
+	for start+limit < len(s) {
+		part := s[start:start+limit]
+		partLastSpaceIndex := strings.LastIndex(part, " ")
+		if partLastSpaceIndex != -1 {
+			part = part[:partLastSpaceIndex]
+			start += 1
+		}
+
+		start += len(part)
+
+		sb.WriteString(part)
+		sb.WriteByte('\n')
+	}
+
+	sb.WriteString(s[start:])
+
+	return sb.String()
+}
+
 func printTranslate(result TranslateResult, err error) {
 	if err != nil {
 		println(err.Error())
 	} else {
-		println(result.String())
+		println(WrapText(result.String(), 80))
 	}
 }
 

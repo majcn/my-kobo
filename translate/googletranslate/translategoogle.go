@@ -12,19 +12,13 @@ import (
 	"net/url"
 	"regexp"
 	"strconv"
-	"time"
 	. "translate/types"
 )
 
 func GetRawObjectGetParams(baseUrl string) (result url.Values, err error) {
 	r, err := http.Get(baseUrl)
 	if err != nil {
-		time.Sleep(time.Second)
-		r, err = http.Get(baseUrl)
-
-		if err != nil {
-			err = errors.New("error getting translate.google.com")
-		}
+		err = errors.New("error getting translate.google.com")
 	}
 	defer r.Body.Close()
 

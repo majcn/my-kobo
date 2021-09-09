@@ -5,8 +5,14 @@ menu_item :reader    :Orientation (portrait)      :nickel_orientation :portrait
 menu_item :reader    :Orientation (landscape)     :nickel_orientation :landscape
 
 menu_item :selection_search :Google Translate (Detailed) :nickel_wifi :autoconnect
-    chain_success    :cmd_output     :10000:/mnt/onboard/.adds/majcn/translate '{1|aS|"$}' 'GD'
+    chain_success    :cmd_output     :9999:quiet:/mnt/onboard/.adds/majcn/wait_for_wifi_up.sh
+    chain_success    :cmd_output     :2000:/mnt/onboard/.adds/majcn/translate '{1|aS|"$}' 'GD'
+    chain_failure    :dbg_toast      :No internet connection
 menu_item :selection_search :Google Translate (Simple)   :nickel_wifi :autoconnect
-    chain_success    :cmd_output     :10000:/mnt/onboard/.adds/majcn/translate '{1|aS|"$}' 'GS'
+    chain_success    :cmd_output     :9999:quiet:/mnt/onboard/.adds/majcn/wait_for_wifi_up.sh
+    chain_success    :cmd_output     :2000:/mnt/onboard/.adds/majcn/translate '{1|aS|"$}' 'GS'
+    chain_failure    :dbg_toast      :No internet connection
 menu_item :selection_search :Termania                    :nickel_wifi :autoconnect
-    chain_success    :cmd_output     :10000:/mnt/onboard/.adds/majcn/translate '{1|aS|"$}' 'T'
+    chain_success    :cmd_output     :9999:quiet:/mnt/onboard/.adds/majcn/wait_for_wifi_up.sh
+    chain_success    :cmd_output     :2000:/mnt/onboard/.adds/majcn/translate '{1|aS|"$}' 'T'
+    chain_failure    :dbg_toast      :No internet connection

@@ -36,7 +36,7 @@ func printTranslate(result TranslateResult, err error) {
 	if err != nil {
 		println(err.Error())
 	} else {
-		println(WrapText(result.String(), 80))
+		println(WrapText(result.String(), 40))
 	}
 }
 

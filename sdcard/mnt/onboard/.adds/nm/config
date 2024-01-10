@@ -1,5 +1,5 @@
 menu_item :main    :USB Connection          :nickel_misc        :force_usb_connection
-menu_item :main    :Kobo Sync               :cmd_output         :5000:/mnt/onboard/.adds/majcn/koboSync
+menu_item :main    :Kobo Sync               :cmd_output         :9999:/mnt/onboard/.adds/majcn/koboSync
 
 menu_item :reader    :Orientation (portrait)      :nickel_orientation :portrait
 menu_item :reader    :Orientation (landscape)     :nickel_orientation :landscape

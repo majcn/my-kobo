@@ -34,7 +34,7 @@ pub fn unzip_to_kobo_sdcard(bytes: Vec<u8>) -> Result<(), zip::result::ZipError>
 
         if (*file.name()).ends_with('/') {
             println!("File {} extracted to \"{}\"", i, outpath.display());
-            fs::create_dir_all(&outpath)?;
+            fs::create_dir_all(outpath)?;
         } else {
             println!(
                 "File {} extracted to \"{}\" ({} bytes)",
@@ -47,7 +47,7 @@ pub fn unzip_to_kobo_sdcard(bytes: Vec<u8>) -> Result<(), zip::result::ZipError>
                     fs::create_dir_all(p)?;
                 }
             }
-            let mut outfile = fs::File::create(&outpath)?;
+            let mut outfile = fs::File::create(outpath)?;
             io::copy(&mut file, &mut outfile)?;
         }
 

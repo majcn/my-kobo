@@ -11,7 +11,9 @@ pub enum TranslateError {
 impl ToString for TranslateError {
     fn to_string(&self) -> String {
         match self {
-            TranslateError::NETWORK => String::from("Something went wrong when accessing internet."),
+            TranslateError::NETWORK => {
+                String::from("Something went wrong when accessing internet.")
+            }
             TranslateError::JSON => String::from("Something went wrong while parsing content."),
         }
     }

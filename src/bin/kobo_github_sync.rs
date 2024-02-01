@@ -3,14 +3,14 @@ use std::io::Read;
 use std::io::{self, Cursor};
 use std::process::exit;
 
-fn download(url: &str) -> Result<Vec<u8>, ureq::Error> {
-    let resp = ureq::get(url).call()?;
+fn download(url: &str) -> Option<Vec<u8>> {
+    let resp = ureq::get(url).call().ok()?;
 
     let mut reader = io::BufReader::new(resp.into_reader());
     let mut bytes = vec![];
-    reader.read_to_end(&mut bytes)?;
+    reader.read_to_end(&mut bytes).ok()?;
 
-    Ok(bytes)
+    Some(bytes)
 }
 
 pub fn unzip_to_kobo_sdcard(bytes: Vec<u8>) -> Result<(), zip::result::ZipError> {
@@ -69,18 +69,15 @@ fn main() {
     const ARCHIVE_URL: &str = "https://github.com/majcn/my-kobo/archive/refs/heads/master.zip";
 
     let zip_bytes = match download(ARCHIVE_URL) {
-        Ok(bytes) => bytes,
-        Err(_) => {
+        Some(bytes) => bytes,
+        None => {
             println!("Error while downloading from github.");
             exit(1);
         }
     };
 
-    match unzip_to_kobo_sdcard(zip_bytes) {
-        Ok(_) => {}
-        Err(_) => {
-            println!("Error while extracting files.");
-            exit(1);
-        }
+    if unzip_to_kobo_sdcard(zip_bytes).is_err() {
+        println!("Error while extracting files.");
+        exit(1);
     }
 }
